@@ -1,5 +1,5 @@
 'use strict';
-const {knuthShuffle} = require('knuth-shuffle');
+//const {knuthShuffle} = require('knuth-shuffle');
 const strat = require('./bj7Strategy.js');
 
 //------------------------------------------------------------------
@@ -53,7 +53,7 @@ var Stack = function() {
   this.muck=[];
 
   this.makeDeck           = stackMakeDeck;
-  this.shuffle            = ()=>{knuthShuffle(this.cards);};
+  this.shuffle            = ()=>{riffleShuffle(this.cards)};
   this.count              = ()=> {return this.cards.length;};
   this.numberOfDecks      = 0;
   this.deal               = stackDeal;
@@ -91,6 +91,21 @@ var stackMakeDeck = function(n) {
   for (i=0; i<this.eachCardArray.length; i++){
     i==8? this.eachCardArray[i] = 4*4*this.numberOfDecks: this.eachCardArray[i]=4*this.numberOfDecks;
   }
+}
+
+
+var riffleShuffle = function(deck) {
+  const cutDeckVariant = deck.length / 2 + Math.floor(Math.random() * 9) - 4;
+  const leftHalf = deck.splice(0, cutDeckVariant);
+  let leftCount = leftHalf.length;
+  let rightCount = deck.length - Math.floor(Math.random() * 4);
+  while(leftCount > 0) {
+    const takeAmount = Math.floor(Math.random() * 4);
+    deck.splice(rightCount, 0, ...leftHalf.splice(leftCount, takeAmount));
+    leftCount -= takeAmount;
+    rightCount = rightCount - Math.floor(Math.random() * 4) + takeAmount;
+  }
+  deck.splice(rightCount, 0, ...leftHalf);
 }
 
 //-----------------------------------------------------------------------------
